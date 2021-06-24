@@ -1,0 +1,25 @@
+job("myjavaappjob"){
+    description("Java Application")
+  
+	scm {
+        github(ownerAndProject='vimallinuxworld13/simple-java-maven-app', 
+               branch='master',
+               
+              )
+    }
+  	steps{
+  		shell('date')
+      	maven{
+      		mavenInstallation('maven-v3')
+            goals("package")
+      	}
+        shell("java -jar target/*.jar")
+      
+        publishers {
+             archiveArtifacts('target/*.jar')
+             archiveJunit('target/surefire-reports/*.xml')
+        }
+  	} 
+
+  
+}
