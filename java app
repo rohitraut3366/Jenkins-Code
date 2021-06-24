@@ -1,0 +1,38 @@
+pipeline{
+    agent none
+    stages{
+        
+        stage('gitscm'){
+            agent{
+            label 'maven-slave'
+            }
+            steps{
+                git 'https://github.com/vimallinuxworld13/simple-java-maven-app.git'
+                stash includes: "*", name: "java-app"
+                // stash includes: "pom.xml", name: "maven-pom-file"
+            }
+        
+        }
+        
+        stage('build'){
+            agent{
+                label 'maven-slave'
+            }
+            steps{
+                unstash "java-app"
+                sh "mvn package"
+                stash includes: "*", name: "jarfile"
+            }
+        }
+        
+        stage('deploy'){
+            agent{
+                label 'maven-slave'
+            }
+            steps{
+                unstash "jarfile"
+                sh 'java -jar target/*.jar'
+            }
+        }
+    }
+}
