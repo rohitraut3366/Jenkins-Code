@@ -8,7 +8,7 @@ pipeline{
             }
             steps{
                 git 'https://github.com/vimallinuxworld13/simple-java-maven-app.git'
-                stash includes: "*", name: "java-app"
+                stash includes: "**", name: "java-app"
                 // stash includes: "pom.xml", name: "maven-pom-file"
             }
         
@@ -21,7 +21,8 @@ pipeline{
             steps{
                 unstash "java-app"
                 sh "mvn package"
-                stash includes: "*", name: "jarfile"
+                sh "find"
+                stash includes: "**", name: "jarfile"
             }
         }
         
@@ -31,6 +32,7 @@ pipeline{
             }
             steps{
                 unstash "jarfile"
+                sh "find"
                 sh 'java -jar target/*.jar'
             }
         }
